@@ -3,7 +3,13 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+           
+        <div class="col-md-12">
+                @if (session('status'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
+                @endif
             <div class="card">
                 <div class="card-header">
                     Categories
@@ -12,12 +18,7 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    
+                    @if ($categories->count() > 0)
                     <ul class="list-group">
                         @foreach ($categories as $category)
                             <li class="list-group-item">
@@ -27,6 +28,10 @@
                             </li>
                         @endforeach
                     </ul>
+                    @else
+                        <h3 class="text-center">No Category</h3>
+                    @endif
+                    
                     <form action="" method="POST" id="deleteCategoryForm">
                         @csrf
                         @method('DELETE')

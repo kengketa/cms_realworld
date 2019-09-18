@@ -16,7 +16,8 @@ class PostController extends Controller
     public function index()
     {
         $posts = Post::all();
-        return view('posts.index')->with('posts',$posts);
+       
+        return view('posts.index2')->with('posts',$posts)->with('trashed',0);
     }
 
     /**
@@ -72,7 +73,8 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        return view('posts.create')->with('post',$post);
     }
 
     /**
@@ -95,6 +97,25 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $post = Post::withTrashed()->where('id',$id)->firstOrFail();
+
+        if ($post->trashed()) {
+            $post->forceDelete();
+            session()->flash('status','Post deleted Permanently');
+            return redirect(route('trashed-posts.index'));
+        }
+        else {
+            $post->delete();
+            session()->flash('status','Post trashed successfully');
+            return redirect(route('posts.index2'));
+        }
+       
+        
+
+    }
+    public function trashed(){
+        $trashed = Post::onlyTrashed()->get();
+        return view('posts.index2')->with('posts',$trashed)->with('trashed',1);
+        //return view('posts.index')->withPosts($trashed);   // all so works similary the above line
     }
 }
