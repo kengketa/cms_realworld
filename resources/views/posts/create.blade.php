@@ -38,12 +38,20 @@
                         </div>
                         <div class="form-group">
                                 <label for="content">Content</label>
-                                <textarea type="text" class="form-control" name="content" id="content" placeholder="content" cols="5" rows="5">{{ isset($post) ? $post->content : '' }}</textarea>
+                                {{-- <textarea type="text" class="form-control" name="content" id="content" placeholder="content" cols="5" rows="5">{{ isset($post) ? $post->content : '' }}</textarea> --}}
+                                <input id="content" type="hidden" name="content" value="{{ isset($post) ? $post->content : '' }}">
+                                <trix-editor input="content"></trix-editor>
+                                
                         </div>
                         <div class="form-group">
                                 <label for="title">Published At</label>
                                 <input type="text" class="form-control" name="published_at" id="published_at" placeholder="published_at" value="{{ isset($post) ? $post->published_at : '' }}">
                         </div>
+                        @if (isset($post))
+                            <div class="form-group">
+                                <img src="{{ asset('/storage/'.$post->image) }}" alt="" style="width:100%">
+                            </div>  
+                        @endif
                         <div class="form-group">
                                 <label for="title">Image</label>
                                 <input type="file" class="form-control" name="image" id="image">
@@ -62,3 +70,21 @@
 </div>
 
 @endsection
+
+
+@section('css')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.0/trix.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    @endsection
+    
+    @section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.0/trix.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        flatpickr('#published_at',{
+            enableTime:true
+        });
+    </script>
+@endsection
+

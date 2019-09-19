@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Post;
 use App\Http\Requests\Posts\CreatePostsRequest;
+use App\Http\Requests\Posts\UpdatePostsRequest;
 
 class PostController extends Controller
 {
@@ -46,7 +47,8 @@ class PostController extends Controller
             'title'         =>      $request->title,
             'description'   =>      $request->description,
             'content'       =>      $request->content,
-            'image'         =>      $image
+            'image'         =>      $image,
+            'published_at'  =>      $request->published_at
 
         ]);
 
@@ -84,9 +86,18 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePostsRequest $request ,Post $post)
     {
-        //
+        //$post = Post::findOrFail($id);
+        $data = $request->all();
+        if($request->hasFile('image')){
+            $image = $request->image->store('posts');
+            $post->deleteImage();
+            $data['image'] = $image;
+        }
+        $post->update($data);
+        session()->flash('status','Post Updated successfully');
+        return redirect(route('posts.index'));
     }
 
     /**
@@ -100,6 +111,7 @@ class PostController extends Controller
         $post = Post::withTrashed()->where('id',$id)->firstOrFail();
 
         if ($post->trashed()) {
+            $post->deleteImage();
             $post->forceDelete();
             session()->flash('status','Post deleted Permanently');
             return redirect(route('trashed-posts.index'));
@@ -107,7 +119,7 @@ class PostController extends Controller
         else {
             $post->delete();
             session()->flash('status','Post trashed successfully');
-            return redirect(route('posts.index2'));
+            return redirect(route('posts.index'));
         }
        
         
@@ -117,5 +129,13 @@ class PostController extends Controller
         $trashed = Post::onlyTrashed()->get();
         return view('posts.index2')->with('posts',$trashed)->with('trashed',1);
         //return view('posts.index')->withPosts($trashed);   // all so works similary the above line
+    }
+
+    public function restore($id){
+
+        $post = Post::withTrashed()->where('id',$id)->firstOrFail();
+        $post->restore();
+        session()->flash('status','Post Restored successfully');
+        return redirect()->back();
     }
 }

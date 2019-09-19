@@ -45,6 +45,12 @@
                                         </form>
                                         @if (!$post->trashed())
                                             <a href="{{ route('posts.edit',$post->id) }}" class="btn btn-primary btn-sm float-right">Edit</a>
+                                        @else  
+                                            <form action="{{ route('posts.restore',$post->id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <button type="submit" class="btn btn-primary btn-sm float-right">Restore</button>
+                                            </form>  
                                         @endif
                                         
                                     
