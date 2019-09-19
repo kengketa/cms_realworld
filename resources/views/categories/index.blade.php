@@ -22,7 +22,8 @@
                     <ul class="list-group">
                         @foreach ($categories as $category)
                             <li class="list-group-item">
-                                {{ $category->name }}
+                                    <h3><span class="badge badge-primary">{{ $category->posts->count() }}</span></h3>
+                                    {{ $category->name }} 
                                 <button class="btn btn-danger btn-sm float-right" onclick="handleDelete({{ $category->id }})">Delete</button>
                                 <a href="{{ route('categories.edit',$category->id) }}" class="btn btn-success btn-sm float-right">Edit</a>
                             </li>

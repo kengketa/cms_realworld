@@ -25,6 +25,7 @@
                             <tr>
                                 <th>Image</th>
                                 <th>Title</th>
+                                <th>Category</th>
                                 <th class="text-right">Actions</th>
                             </tr>
                         </thead>
@@ -34,6 +35,10 @@
                                 <tr>
                                     <td><img src="{{ asset('/storage/'.$post->image) }}" width="120px" height="120px" alt=""></td>
                                     <td>{{ $post->title }}</td>
+                                    <td>
+                                        <a href="{{ route('categories.edit',$post->category->id) }}">{{ $post->category->name }}</a>
+                                    </td>
+
 
                                     <td>
                                         <form action="{{ route('posts.destroy',$post->id) }}" method="POST">

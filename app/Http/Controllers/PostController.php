@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Post;
 use App\Http\Requests\Posts\CreatePostsRequest;
 use App\Http\Requests\Posts\UpdatePostsRequest;
+use App\Category;
 
 class PostController extends Controller
 {
@@ -28,7 +29,9 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $categories = Category::all();
+
+        return view('posts.create')->with('categories',$categories);
     }
 
     /**
@@ -48,7 +51,8 @@ class PostController extends Controller
             'description'   =>      $request->description,
             'content'       =>      $request->content,
             'image'         =>      $image,
-            'published_at'  =>      $request->published_at
+            'published_at'  =>      $request->published_at,
+            'category_id'   =>      $request->category
 
         ]);
 
@@ -75,8 +79,9 @@ class PostController extends Controller
      */
     public function edit($id)
     {
+        $categories = Category::all();
         $post = Post::find($id);
-        return view('posts.create')->with('post',$post);
+        return view('posts.create')->with('post',$post)->with('categories',$categories);
     }
 
     /**
