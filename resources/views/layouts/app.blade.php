@@ -74,6 +74,20 @@
         <main class="py-4">
             @auth
             <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                            @if (session()->has('success'))
+                                <div class="alert alert-success" role="alert">
+                                    {{ session()->get('success') }}
+                                </div>
+                            @endif
+                            @if (session()->has('error'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ session()->get('error') }}
+                                </div>
+                            @endif
+                    </div>
+                </div>
                     <div class="row">
                         <div class="col-md-4">
                             <ul class="list-group">

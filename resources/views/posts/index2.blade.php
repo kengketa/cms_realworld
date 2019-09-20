@@ -6,11 +6,6 @@
     
         <div class="d-flex justify-content-end mb-2">
         </div>
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
         <div class="card card-default">
             <div class="card-header">
                 Posts

@@ -29,7 +29,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Route::get('/categories/{id}/delete', 'CategoryController@destroy');
 
-Route::resource('categories', 'CategoryController');
-Route::resource('posts', 'PostController');
-Route::get('/trashed-posts','PostController@trashed')->name('trashed-posts.index');
-Route::put('restore-posts/{post}','PostController@restore')->name('posts.restore');
+
+
+Route::group(['middleware' => ['auth']], function () {
+    
+    Route::resource('categories', 'CategoryController');
+    Route::resource('posts', 'PostController')->middleware('auth');
+    Route::get('/trashed-posts','PostController@trashed')->name('trashed-posts.index');
+    Route::put('restore-posts/{post}','PostController@restore')->name('posts.restore');
+    
+});

@@ -10,6 +10,11 @@ use App\Category;
 
 class PostController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('VerifyCategoriesCount')->only(['create','store']);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -14,7 +14,6 @@
                 <div class="card-header">
                     Categories
                     <a href="{{ route('categories.create') }}" class="btn btn-primary btn-sm float-right">NEW</a>
-
                 </div>
 
                 <div class="card-body">
@@ -23,8 +22,12 @@
                         @foreach ($categories as $category)
                             <li class="list-group-item">
                                     <h3><span class="badge badge-primary">{{ $category->posts->count() }}</span></h3>
-                                    {{ $category->name }} 
-                                <button class="btn btn-danger btn-sm float-right" onclick="handleDelete({{ $category->id }})">Delete</button>
+                                    {{ $category->name }}
+                                    @if ($category->posts()->count() > 0)
+                                        <button class="btn btn-danger btn-sm float-right" disabled>Disabled</button>
+                                    @else
+                                        <button class="btn btn-danger btn-sm float-right" onclick="handleDelete({{ $category->id }})">Delete</button>
+                                    @endif
                                 <a href="{{ route('categories.edit',$category->id) }}" class="btn btn-success btn-sm float-right">Edit</a>
                             </li>
                         @endforeach

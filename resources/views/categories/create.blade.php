@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<h1 class="text-center my-2">{{ isset($category) ? 'Edit Category' : 'Create Category' }}</h1>
 <div class="row justify-content-center">
     <div class="col-md-12">
             <div class="card car-default">
