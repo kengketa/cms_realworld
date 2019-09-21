@@ -21,4 +21,18 @@ class Post extends Model
     {
         return $this->belongsTo('App\Category');
     }
+    public function tags()
+    {
+        return $this->belongsToMany('App\Tag');
+    }
+    /**
+     * check if a post has tag
+     * @return bool
+     * 
+     */
+
+
+    public function hasTag($tagId){
+        return in_array($tagId,$this->tags->pluck('id')->toArray());
+    }
 }

@@ -10,16 +10,7 @@
                 </div>
                 <div class="card-body">
                     
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul class="list-group">
-                                @foreach ($errors->all() as $error)
-                                    <li class="list-group-item">{{ $error }}</li>
-                                @endforeach
-                               
-                            </ul>
-                        </div>
-                    @endif
+                    @include('partials.errors')
                     
                     <form action="{{ isset($post) ? route('posts.update',$post->id) : route('posts.store')}}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -63,7 +54,7 @@
                                        <option value="{{ $category->id }}"
                                         @if (isset($post))
                                             @if ($category->id == $post->category_id)
-                                            selected
+                                                selected
                                             @endif
                                         @endif
                                         
@@ -71,6 +62,25 @@
                                     @endforeach
                                 </select>
                         </div>
+                        @if ($tags->count() > 0)
+                            <div class="form-group">
+                                <label for="tags">Tags</label>
+                                <select id="tags" class="form-control tags-selector" name="tags[]" multiple>
+                                    @foreach ($tags as $tag)
+                                        <option value="{{ $tag->id }}"
+                                        @if (isset($post))
+                                            @if($post->hasTag($tag->id))
+                                                selected
+                                            @endif
+                                        @endif
+                                        >
+
+                                        {{ $tag->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        
 
                         <div class="form-group float-right">
                             <button class="btn btn-success" type="submit">
@@ -90,16 +100,23 @@
 @section('css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.0/trix.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css" rel="stylesheet" />
     @endsection
     
     @section('script')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.2.0/trix.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
     <script>
         flatpickr('#published_at',{
             enableTime:true
         });
+    </script>
+    <script>
+    // In your Javascript (external .js resource or <script> tag)
+    $(document).ready(function() {
+        $('.tags-selector').select2();
+    });
     </script>
 @endsection
 

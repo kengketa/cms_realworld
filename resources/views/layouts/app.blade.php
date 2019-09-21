@@ -97,6 +97,9 @@
                                 <li class="list-group-item">
                                     <a href="/posts">Posts</a>
                                 </li>
+                                <li class="list-group-item">
+                                    <a href="/tags">Tags</a>
+                                </li>
                             </ul>
                             <ul class="list-group mt-5">
                                 <li class="list-group-item">

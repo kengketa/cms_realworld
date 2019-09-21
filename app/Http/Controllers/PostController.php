@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Post;
+
 use App\Http\Requests\Posts\CreatePostsRequest;
 use App\Http\Requests\Posts\UpdatePostsRequest;
 use App\Category;
+use App\Post;
+use App\Tag;
+
 
 class PostController extends Controller
 {
@@ -35,8 +38,8 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-
-        return view('posts.create')->with('categories',$categories);
+        $tags = Tag::all();
+        return view('posts.create')->with('categories',$categories)->with('tags',$tags);
     }
 
     /**
@@ -47,7 +50,7 @@ class PostController extends Controller
      */
     public function store(CreatePostsRequest $request)
     {
-     
+        
         //$data = $request->all();
         $image = $request->image->store('posts');
         $post = Post::create([
@@ -60,8 +63,12 @@ class PostController extends Controller
             'category_id'   =>      $request->category
 
         ]);
+        
+        if($request->tags){
+            $post->tags()->attach($request->tags);
+        }
 
-        session()->flash('status','Created new Post successfully');
+        session()->flash('success','Created new Post successfully');
         return redirect(route('posts.index'));
     }
 
@@ -85,8 +92,10 @@ class PostController extends Controller
     public function edit($id)
     {
         $categories = Category::all();
+        $tags = Tag::all();
         $post = Post::find($id);
-        return view('posts.create')->with('post',$post)->with('categories',$categories);
+        // dd($post->tags->pluck('id')->toArray());
+        return view('posts.create')->with('post',$post)->with('categories',$categories)->with('tags',$tags);
     }
 
     /**
@@ -105,8 +114,13 @@ class PostController extends Controller
             $post->deleteImage();
             $data['image'] = $image;
         }
+
+        if($request->tags){
+            $post->tags()->sync($request->tags);
+        }
+
         $post->update($data);
-        session()->flash('status','Post Updated successfully');
+        session()->flash('success','Post Updated successfully');
         return redirect(route('posts.index'));
     }
 
@@ -123,12 +137,12 @@ class PostController extends Controller
         if ($post->trashed()) {
             $post->deleteImage();
             $post->forceDelete();
-            session()->flash('status','Post deleted Permanently');
+            session()->flash('success','Post deleted Permanently');
             return redirect(route('trashed-posts.index'));
         }
         else {
             $post->delete();
-            session()->flash('status','Post trashed successfully');
+            session()->flash('success','Post trashed successfully');
             return redirect(route('posts.index'));
         }
        
@@ -145,7 +159,7 @@ class PostController extends Controller
 
         $post = Post::withTrashed()->where('id',$id)->firstOrFail();
         $post->restore();
-        session()->flash('status','Post Restored successfully');
+        session()->flash('success','Post Restored successfully');
         return redirect()->back();
     }
 }
